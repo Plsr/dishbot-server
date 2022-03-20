@@ -9,6 +9,7 @@ import { startDatabase } from './database/mongo.mjs';
 import { getAds, insertAd, deleteAd, updateAd } from './database/ads.mjs';
 import { createUser } from './database/auth.mjs';
 import validateToken from './middleware/validateToken.mjs';
+import mongoose from 'mongoose'
 
 config()
 const app = express();
@@ -60,8 +61,17 @@ app.put('/:id', async (req, res) => {
 })
 
 
+const kittySchema = new mongoose.Schema({
+  name: String
+});
+
+const Kitten = mongoose.model('Kitten', kittySchema);
+
 startDatabase().then(async () => {
-  await insertAd({ title: "Hello, now from in memory database" })
+  // await insertAd({ title: "Hello, now from in memory database" })
+  // const silence = new Kitten({ name: 'Silence' });
+  // console.log(silence.name); // 'Silence'
+  // await silence.save()
 
   app.listen(process.env.PORT || 3000, () => {
     console.log('listening to port 3000')

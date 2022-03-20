@@ -23,6 +23,7 @@
     "helmet": "^5.0.2",
     "mongodb": "^4.4.1",
     "mongodb-memory-server": "^8.4.1",
+    "mongoose": "^6.2.7",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
