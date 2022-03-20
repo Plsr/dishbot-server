@@ -3,6 +3,7 @@ const SKIP_PATHNAMES = []
 
 const validateToken = async (req, res, next) => {
   const token = req.token
+  console.log(token)
   try {
     const verificationRes = await adminApp.auth().verifyIdToken(token)
     req.user = { ...verificationRes }

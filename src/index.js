@@ -10,6 +10,7 @@ import { getAds, insertAd, deleteAd, updateAd } from './database/ads.mjs';
 import { createUser } from './database/auth.mjs';
 import validateToken from './middleware/validateToken.mjs';
 import mongoose from 'mongoose'
+import { addRecipe } from './database/recipes.mjs'
 
 config()
 const app = express();
@@ -58,6 +59,12 @@ app.put('/:id', async (req, res) => {
   const updatedAd = req.body
   await updateAd(req.params.id, updatedAd)
   res.send({ message: 'Ad updated' })
+})
+
+app.post('/recipes', async(req, res) => {
+  console.log(req.user)
+  const recipe = await addRecipe(req.body, req.user)
+  res.send({ message: 'created', recipe })
 })
 
 
