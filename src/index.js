@@ -7,7 +7,8 @@ import bearerToken from 'express-bearer-token';
 import { config } from 'dotenv'
 import { startDatabase } from './database/mongo.mjs';
 import { getAds, insertAd, deleteAd, updateAd } from './database/ads.mjs';
-import { createUser, validateToken } from './database/auth.mjs';
+import { createUser } from './database/auth.mjs';
+import validateToken from './middleware/validateToken.mjs';
 
 config()
 const app = express();
@@ -21,6 +22,7 @@ app.use(bodyParser.json())
 app.use(cors())
 app.use(morgan('combined'))
 app.use(bearerToken())
+app.use(validateToken)
 
 app.get('/', async (req, res) => {
   res.send(await getAds())
@@ -42,15 +44,8 @@ app.post('/users', async(req,res) => {
   res.send({ message: 'User created', user })
 })
 
-app.post('/token', async(req, res) => {
-  const token = req.token
-  const validationRes = await validateToken(token)
-
-  if (validationRes) {
-    res.send(validationRes)
-  } else {
-    res.status(401).end()
-  }
+app.post('/token', (req, res) => {
+  res.send(req.user)
 })
 
 app.delete('/:id', async (req, res) => {

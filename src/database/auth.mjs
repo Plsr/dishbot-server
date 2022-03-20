@@ -9,16 +9,3 @@ export async function createUser(email, password) {
 
   return user
 }
-
-export async function validateToken(token) {
-  try {
-    const res = await adminApp.auth().verifyIdToken(token)
-    return {
-      email: res.email,
-      id: res.uid
-    }
-  } catch (error) {
-    console.error(error)
-    return false
-  }
-}
