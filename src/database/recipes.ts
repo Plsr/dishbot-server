@@ -1,13 +1,12 @@
-import mongoose from "mongoose";
-import recipeSchema from "./schemas/recipeSchema.js";
-
-// TODO: This is weird
-const Recipe = mongoose.model<typeof recipeSchema>('Recipe', recipeSchema)
+import Recipe, { IRecipe } from "./schemas/recipeSchema.js";
 
 // TODO: Better typings for arguments
-export async function addRecipe(recipe: any, user: any) {
-  // TODO: Validation
-  const newRecipe = new Recipe({ ...recipe, userId: user.user_id })
-  const createdRecipe = await newRecipe.save()
-  return createdRecipe
+export async function addRecipe(recipe: any, user: any): Promise<IRecipe> {
+  try {
+    const newRecipe = await Recipe.create({ ...recipe, userId: user.user_id })
+    return newRecipe
+  } catch (error: any) {
+    console.error(error)
+    throw (error)
+  }
 }

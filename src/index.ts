@@ -42,9 +42,12 @@ app.post('/token', (req, res) => {
 })
 
 app.post('/recipes', async(req, res) => {
-  console.log(req.user)
-  const recipe = await addRecipe(req.body, req.user)
-  res.send({ message: 'created', recipe })
+  try {
+    const recipe = await addRecipe(req.body, req.user)
+    res.status(201).send({ recipe })
+  } catch (error) {
+    res.status(400).send(error)
+  }
 })
 
 
