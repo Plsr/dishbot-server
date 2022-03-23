@@ -1,7 +1,8 @@
-import adminApp from '../util/firebase.mjs'
+import adminApp from '../util/firebase.js'
 const SKIP_PATHNAMES = []
 
-const validateToken = async (req, res, next) => {
+// TODO: Typings
+const validateToken = async (req: any, res: any, next: any) => {
   const token = req.token
   console.log(token)
   try {

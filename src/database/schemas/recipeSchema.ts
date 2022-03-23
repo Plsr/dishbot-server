@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
-const { Schema } = mongoose;
 
-const recipeSchema = new Schema({
+const recipeSchema = new mongoose.Schema({
   title:  String,
   description: String,
   userId:   String,
