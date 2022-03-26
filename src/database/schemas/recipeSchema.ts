@@ -12,7 +12,13 @@ const recipeSchema = new mongoose.Schema({
     required: true
   },
   ingredients: {
-    type: [{ name: String, amount: Number, unit: String }],
+    type: [
+      {
+        name: { type: String, required: [true, "Ingredient name is required"] },
+        amount: { type: Number, required: [true, "Ingredient amount is required"] },
+        unit: { type: String, required: [true, "Ingredient unit is required"] }
+      }
+    ],
     required: true,
     validate: {
       validator: (i: [{}]) => Array.isArray(i) && i.length > 0,
