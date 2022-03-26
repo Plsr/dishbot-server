@@ -38,12 +38,12 @@ app.post('/users', async(req,res) => {
 })
 
 app.post('/token', (req, res) => {
-  res.send(req.user)
+  res.send(req.userIdToken)
 })
 
 app.post('/recipes', async(req, res) => {
   try {
-    const recipe = await addRecipe(req.body, req.user)
+    const recipe = await addRecipe(req.body, req.userIdToken!)
     res.status(201).send({ recipe })
   } catch (error) {
     res.status(400).send(error)

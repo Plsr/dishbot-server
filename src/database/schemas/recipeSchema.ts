@@ -1,19 +1,5 @@
 import mongoose from 'mongoose';
-
-export interface IRecipe extends mongoose.Document {
-  title: string,
-  description?: string,
-  userId: string,
-  ingredients: [IIngredient],
-  createdAt: Date,
-  updatedAt: Date
-}
-
-export interface IIngredient {
-  name: String,
-  amount: Number,
-  unit: String
-}
+import { Recipe as RecipeInterface } from '../../types/reicpe.d'
 
 const recipeSchema = new mongoose.Schema({
   title:  {
@@ -37,7 +23,7 @@ const recipeSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-const Recipe: mongoose.Model<IRecipe> = mongoose.model('Recipe', recipeSchema)
+const Recipe: mongoose.Model<RecipeInterface> = mongoose.model('Recipe', recipeSchema)
 
 export default Recipe
 

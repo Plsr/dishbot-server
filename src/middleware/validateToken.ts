@@ -7,7 +7,7 @@ const validateToken = async (req: any, res: any, next: any) => {
   console.log(token)
   try {
     const verificationRes = await adminApp.auth().verifyIdToken(token)
-    req.user = { ...verificationRes }
+    req.userIdToken = { ...verificationRes }
     next()
   } catch (error) {
     console.error(error)
