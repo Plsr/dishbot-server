@@ -9,7 +9,9 @@ import { startDatabase } from './database/mongo.js';
 import { createUser } from './database/auth.js';
 import validateToken from './middleware/validateToken.js';
 import mongoose from 'mongoose'
-import { addRecipe } from './database/recipes.js'
+import { addRecipe, getRecipes } from './database/recipes.js'
+
+// TODO: Global error handler?
 
 config()
 const app = express();
@@ -39,6 +41,15 @@ app.post('/users', async(req,res) => {
 
 app.post('/token', (req, res) => {
   res.send(req.userIdToken)
+})
+
+app.get('/recipes', async (req, res) => {
+  try {
+    const recipes = await getRecipes(req.userIdToken!)
+    res.send({ recipes })
+  } catch(error) {
+    res.status(400).send(error)
+  }
 })
 
 app.post('/recipes', async(req, res) => {
