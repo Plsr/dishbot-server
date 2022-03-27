@@ -26,12 +26,6 @@ app.use(validateToken)
 // Routes
 app.use('/recipes', recipesRouter)
 
-declare module 'express-serve-static-core' {
-  interface Request {
-   user?: Object
-  }
-}
-
 app.post('/token', (req, res) => {
   res.send(req.userIdToken)
 })
