@@ -14,6 +14,7 @@ import recipesRouter from './routes/recipes.js'
 // Setup
 config()
 const app = express();
+startDatabase()
 
 // Middlewares
 app.use(helmet())
@@ -30,8 +31,10 @@ app.post('/token', (req, res) => {
   res.send(req.userIdToken)
 })
 
-startDatabase().then(async () => {
-  app.listen(process.env.PORT || 3000, () => {
-    console.log('listening to port 3000')
-  })
+// TODO: Env file for test
+const port = process.env.NODE_ENV == 'test' ? 3008 : process.env.PORT
+app.listen(port, () => {
+  console.log('listening to port ', port)
 })
+
+export default app

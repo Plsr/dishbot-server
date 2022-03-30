@@ -22,3 +22,4 @@ export async function addRecipe(recipe: RequestRecipe, userIdToken: admin.auth.D
 export async function getRecipes(userIdToken: admin.auth.DecodedIdToken): Promise<RecipeInterface[]> {
   return await Recipe.find({ userId: userIdToken.user_id })
 }
+
