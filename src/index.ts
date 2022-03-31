@@ -14,7 +14,9 @@ import recipesRouter from './routes/recipes.js'
 // Setup
 config()
 const app = express();
-startDatabase()
+if (process.env.NODE_ENV !== 'test') {
+  startDatabase()
+}
 
 // Middlewares
 app.use(helmet())

@@ -13,6 +13,8 @@ import chai from 'chai'
 import chaiHttp from 'chai-http'
 import chaiSubest from 'chai-subset'
 import sinon from 'sinon'
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import server from '../index.js'
 import Recipe from '../database/schemas/recipeSchema.js'
@@ -39,10 +41,23 @@ sinon.stub(firebase.auth(), 'verifyIdToken').resolves({
 })
 
 describe('Recipes', () => {
+  let mongoServer: MongoMemoryServer
+
   beforeEach((done) => {
     Recipe.deleteMany({}, (err) => {
       done();
     })
+  })
+
+  before(async() => {
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri);
+  })
+
+  after(async() => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
   })
 
   describe('/GET recipes', () => {
