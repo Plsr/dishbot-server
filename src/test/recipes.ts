@@ -3,7 +3,7 @@
  * - [ ] move stubs out of here
  * - [ ] test GET recipes when recipes present
  * - [x] test /POST recipe happy path
- * - [ ] test /POST recipe error path
+ * - [x] test /POST recipe error path
  * - [ ] test /DELETE recipe
  * - [ ] test /PATCH (or PUT?) recipe path
  */
@@ -60,27 +60,51 @@ describe('Recipes', () => {
   })
 
   describe('/POST recipes', () => {
+    const recipeRequestBody = {
+      title: 'Some recipe',
+      description: 'A very tasty one',
+      ingredients: [
+        { name: 'Bread', amount: 1, unit: 'pcs' },
+        { name: 'Avocado', amount: 1, unit: 'pcs' }
+      ]
+    }
+
     it('should create a new recipe with valid data', (done) => {
-
-      const recipeRequestBody = {
-        title: 'Some recipe',
-        description: 'A very tasty one',
-        ingredients: [
-          { name: 'Bread', amount: 1, unit: 'pcs' },
-          { name: 'Avocado', amount: 1, unit: 'pcs' }
-        ]
-      }
-
+      console.log(recipeRequestBody)
       chai.request(server)
       .post('/recipes')
       .set('Authorization', 'Bearer foobarbaz')
-      .send(recipeRequestBody)
+      .send({ ...recipeRequestBody })
       .end((_err, res) => {
         res.should.have.status(201)
         res.body.recipe.should.containSubset(recipeRequestBody)
+        Recipe.findById(res.body._id).should.exist
+        done()
       })
-      Recipe.countDocuments({}, (_err: any, count: number) => {
-        count.should.equal(1)
+    })
+
+    it('should not create a new recipe without title', (done) => {
+      chai.request(server)
+      .post('/recipes')
+      .set('Authorization', 'Bearer foobarbaz')
+      .send({ ...recipeRequestBody, title: undefined })
+      .end((_err, res) => {
+        res.should.have.status(400)
+        res.body.should.have.own.property('errors')
+        res.body.name.should.equal('ValidationError')
+        done()
+      })
+    })
+
+    it('should not create a new recipe without ingredients', (done) => {
+      chai.request(server)
+      .post('/recipes')
+      .set('Authorization', 'Bearer foobarbaz')
+      .send({ ...recipeRequestBody, ingredients: [] })
+      .end((_err, res) => {
+        res.should.have.status(400)
+        res.body.should.have.own.property('errors')
+        res.body.name.should.equal('ValidationError')
         done()
       })
     })
