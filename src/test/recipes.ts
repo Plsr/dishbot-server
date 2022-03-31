@@ -1,12 +1,4 @@
-/**
- * TODO:
- * - [ ] move stubs out of here
- * - [x] test GET recipes when recipes present
- * - [x] test /POST recipe happy path
- * - [x] test /POST recipe error path
- * - [x] test /DELETE recipe
- * - [ ] test /PATCH (or PUT?) recipe path
- */
+// TODO: Move stubs to distinct file
 
 import firebase from '../util/firebase.js'
 import chai from 'chai'
