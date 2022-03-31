@@ -1,7 +1,7 @@
 /**
  * TODO:
  * - [ ] move stubs out of here
- * - [ ] test GET recipes when recipes present
+ * - [x] test GET recipes when recipes present
  * - [x] test /POST recipe happy path
  * - [x] test /POST recipe error path
  * - [ ] test /DELETE recipe
@@ -43,6 +43,15 @@ sinon.stub(firebase.auth(), 'verifyIdToken').resolves({
 describe('Recipes', () => {
   let mongoServer: MongoMemoryServer
 
+  const recipeRequestBody = {
+    title: 'Some recipe',
+    description: 'A very tasty one',
+    ingredients: [
+      { name: 'Bread', amount: 1, unit: 'pcs' },
+      { name: 'Avocado', amount: 1, unit: 'pcs' }
+    ]
+  }
+
   beforeEach((done) => {
     Recipe.deleteMany({}, (err) => {
       done();
@@ -61,7 +70,7 @@ describe('Recipes', () => {
   })
 
   describe('/GET recipes', () => {
-    it('should get all the recipes', (done) => {
+    it('should return empty array if no recipes present', (done) => {
       chai.request(server)
       .get('/recipes')
       .end((_err, res) => {
@@ -72,18 +81,41 @@ describe('Recipes', () => {
         done()
       })
     })
+
+    it('should get all the recipes', (done) => {
+      Recipe.create([
+        { ...recipeRequestBody, userId: 'asd' },
+        { ...recipeRequestBody, userId: 'asd' },
+      ])
+      chai.request(server)
+      .get('/recipes')
+      .end((_err, res) => {
+        res.should.have.status(200)
+        res.body.should.have.own.property('recipes')
+        res.body.recipes.should.be.a('array');
+        res.body.recipes.length.should.be.eql(2);
+        done()
+      })
+    })
+
+    it('should only get recipes that belong to the user', (done) => {
+      Recipe.create([
+        { ...recipeRequestBody, userId: 'asd' },
+        { ...recipeRequestBody, userId: 'hjk' },
+      ])
+      chai.request(server)
+      .get('/recipes')
+      .end((_err, res) => {
+        res.should.have.status(200)
+        res.body.should.have.own.property('recipes')
+        res.body.recipes.should.be.a('array');
+        res.body.recipes.length.should.be.eql(1);
+        done()
+      })
+    })
   })
 
   describe('/POST recipes', () => {
-    const recipeRequestBody = {
-      title: 'Some recipe',
-      description: 'A very tasty one',
-      ingredients: [
-        { name: 'Bread', amount: 1, unit: 'pcs' },
-        { name: 'Avocado', amount: 1, unit: 'pcs' }
-      ]
-    }
-
     it('should create a new recipe with valid data', (done) => {
       console.log(recipeRequestBody)
       chai.request(server)
@@ -123,6 +155,42 @@ describe('Recipes', () => {
         done()
       })
     })
+  })
+
+  describe('/GET recipe', () => {
+    it('GETs a single recipe', (done) => {
+      const recipeId = Recipe.create({ ...recipeRequestBody, userId: 'asd' }).then((recipe) =>{
+        return recipe._id
+      })
+
+      chai.request(server)
+      .get(`/recipes/${recipeId}`)
+      .set('Authorization', 'Bearer foobarbaz')
+      .end((_err, res) => {
+        res.should.have.status(200)
+        res.body.should.have.own.property('recipe')
+        res.body.recipe.should.containSubset(recipeRequestBody)
+        done()
+      })
+    })
+
+    it('does not get a recipe that belongs to other users', (done) => {
+      const recipeId = Recipe.create({ ...recipeRequestBody, userId: 'hjk' }).then((recipe) =>{
+        return recipe._id
+      })
+
+      chai.request(server)
+      .get(`/recipes/${recipeId}`)
+      .set('Authorization', 'Bearer foobarbaz')
+      .end((_err, res) => {
+        res.should.have.status(404)
+        done()
+      })
+    })
+  })
+
+  describe('/DELETE recipe', () => {
+
   })
 })
 

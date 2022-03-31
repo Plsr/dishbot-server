@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { addRecipe, getRecipes } from '../database/recipes.js'
+import { addRecipe, getRecipes, getRecipe } from '../database/recipes.js'
 
 const recipesRouter = Router()
 
@@ -18,6 +18,16 @@ recipesRouter.post('/', async(req, res) => {
     res.status(201).send({ recipe })
   } catch (error) {
     res.status(400).send(error)
+  }
+})
+
+recipesRouter.get('/:id', async(req, res) => {
+  try {
+    const recipe = await getRecipe(req.userIdToken!, req.params.id)
+    if (!recipe) throw new Error()
+    res.send({ recipe })
+  } catch (error) {
+    res.status(404).end()
   }
 })
 

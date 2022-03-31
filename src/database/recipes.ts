@@ -23,3 +23,7 @@ export async function getRecipes(userIdToken: admin.auth.DecodedIdToken): Promis
   return await Recipe.find({ userId: userIdToken.user_id })
 }
 
+export async function getRecipe(userIdToken: admin.auth.DecodedIdToken, id: string): Promise<RecipeInterface | undefined | null > {
+  return await Recipe.findOne({ userId: userIdToken.user_id, id })
+}
+
