@@ -30,6 +30,7 @@ const mealPlanSchema = new mongoose.Schema({
     default: false
   },
   shoppingList: {
+    ref: "ShoppingList",
     type: mongoose.Schema.Types.ObjectId,
     required: false
   },

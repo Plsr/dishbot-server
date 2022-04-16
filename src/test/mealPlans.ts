@@ -6,6 +6,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import server from '../index.js'
 import MealPlan from '../database/schemas/mealPlanSchema.js'
 import Recipe from '../database/schemas/recipeSchema.js'
+import ShoppingList from '../database/schemas/shoppingListSchema.js'
 
 chai.use(chaiSubest)
 const should = chai.should()
@@ -87,7 +88,7 @@ describe('Meal Plans', () => {
       const res = await chai.request(server).post('/meal-plans').send(mealPlanData)
       res.should.have.status(201)
       res.body.should.have.own.property('mealPlan')
-      res.body.mealPlan.should.containSubset(mealPlanData)
+      res.body.mealPlan.should.containSubset({...mealPlanData, recipes: [{...recipeData}, {...recipeData}]})
       const createdMealPlan = await MealPlan.find({ id: res.body.id })
       createdMealPlan.should.exist  
     })
@@ -102,6 +103,26 @@ describe('Meal Plans', () => {
       res.should.have.status(400)
       res.body.should.have.own.property('errors')
       res.body.errors.should.have.own.property('recipes')
+    })
+
+    it('should create a shopping list for valid meal plans', async () => {
+      const recipes = await Recipe.create([
+        { ...recipeData, userId: 'asd' },
+        { ...recipeData, userId: 'asd' },
+      ])
+      const recipeIds = recipes.map(recipe => recipe._id.toString())
+      const mealPlanData = {
+        userId: 'asd',
+        recipes: [...recipeIds]
+      }
+
+      const res = await chai.request(server).post('/meal-plans').send(mealPlanData)
+      res.should.have.status(201)
+      res.body.should.have.own.property('mealPlan')
+      res.body.mealPlan.should.containSubset({...mealPlanData, recipes: [{...recipeData}, {...recipeData}]})
+      res.body.mealPlan.should.have.own.property('shoppingList')
+      const shoppingList = await ShoppingList.find({ _id: res.body.mealPlan.shoppingList })
+      shoppingList.should.exist  
     })
   })
 })

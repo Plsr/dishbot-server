@@ -5,7 +5,7 @@ import { Recipe } from './reicpe'
 export interface MealPlan extends mongoose.Document {
   title?: string;
   userId: ObjectId;
-  recipes: [Recipe],
+  recipes: [ObjectId],
   isCurrent: boolean;
   shoppingList?: ObjectId, // TODO: ShoppingList type
   createdAt: Date,
