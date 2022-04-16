@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha 'src/test/**/*.ts' --timeout 10000 --exit",
+    "test": "NODE_ENV=test mocha 'src/test/setup.ts' 'src/test/**/*.ts' --timeout 10000 --exit",
     "dev": "nodemon --esm src/index.ts",
     "start": "node --experimental-modules src/index.ts"
   },

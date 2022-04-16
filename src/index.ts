@@ -8,6 +8,7 @@ import { config } from 'dotenv'
 import { startDatabase } from './database/mongo.js';
 import validateToken from './middleware/validateToken.js';
 import recipesRouter from './routes/recipes.js'
+import mealPlansRouter from './routes/mealPlans.js'
 
 // TODO: Global error handler?
 
@@ -30,6 +31,7 @@ app.use(validateToken)
 
 // Routes
 app.use('/recipes', recipesRouter)
+app.use('/meal-plans', mealPlansRouter)
 
 app.post('/token', (req, res) => {
   res.send(req.userIdToken)
