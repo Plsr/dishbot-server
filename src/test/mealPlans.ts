@@ -93,7 +93,6 @@ describe('Meal Plans', () => {
     })
 
     it('should not create a meal plan with invalid data', async () => {
-      console.log('called')
       const mealPlanData = {
         userId: 'asd',
         recipes: []
