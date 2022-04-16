@@ -1,36 +1,13 @@
-// TODO: Move stubs to distinct file
-
-import firebase from '../util/firebase.js'
 import chai from 'chai'
-import chaiHttp from 'chai-http'
 import chaiSubest from 'chai-subset'
-import sinon from 'sinon'
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import server from '../index.js'
 import Recipe from '../database/schemas/recipeSchema.js'
 
-const should = chai.should()
-chai.use(chaiHttp);
 chai.use(chaiSubest)
-
-sinon.stub(firebase.auth)
-
-sinon.stub(firebase.auth(), 'verifyIdToken').resolves({
-  iss: 'https://securetoken.google.com/project123456789',
-  aud: 'project123456789',
-  auth_time: Math.floor(new Date().getTime() / 1000),
-  sub: 'asd',
-  iat: Math.floor(new Date().getTime() / 1000),
-  exp: Math.floor(new Date().getTime() / 1000 + 3600),
-  firebase: {
-    identities: {},
-    sign_in_provider: 'custom',
-  },
-  uid: 'asd',
-  user_id: 'asd'
-})
+const should = chai.should()
 
 describe('Recipes', () => {
   let mongoServer: MongoMemoryServer
