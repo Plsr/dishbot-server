@@ -29,7 +29,11 @@ export async function addMealPlan(mealPlan: RequestMealPlan,  userIdToken: admin
       mealPlanId: newMealPlan._id
     })
 
-    const updatedNewMealPlan = await MealPlan.findByIdAndUpdate(newMealPlan._id, { shoppingList: shoppingList._id }, { new: true }).populate('recipes').populate('shoppingList').exec()
+    const updatedNewMealPlan = await MealPlan
+      .findByIdAndUpdate(newMealPlan._id, { shoppingList: shoppingList._id }, { new: true })
+      .populate('recipes')
+      .populate('shoppingList')
+      .exec()
     if (!updatedNewMealPlan) throw new Error('Meal plan to add shopping list to not found')
 
     return updatedNewMealPlan
