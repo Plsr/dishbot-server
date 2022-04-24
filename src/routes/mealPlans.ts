@@ -1,5 +1,5 @@
 import Router from 'express'
-import { addMealPlan, getMealPlans } from '../database/mealPlans.js'
+import { addMealPlan, getMealPlans, getCurrentMealPlan } from '../database/mealPlans.js'
 
 const mealPlansRouter = Router()
 
@@ -16,6 +16,19 @@ mealPlansRouter.get('/', async(req, res) => {
   try {
     const mealPlans = await getMealPlans(req.userIdToken!)
     res.send({ mealPlans })
+  } catch (error) {
+    res.status(400).send(error)
+  }
+})
+
+mealPlansRouter.get('/current', async(req, res) => {
+  try {
+    const currentMealPlan = await getCurrentMealPlan(req.userIdToken!)
+    if (currentMealPlan) {
+      res.send({ currentMealPlan })
+    } else {
+      res.status(404).end()
+    }
   } catch (error) {
     res.status(400).send(error)
   }
