@@ -47,6 +47,14 @@ export async function getMealPlans(userIdToken: admin.auth.DecodedIdToken): Prom
   return await MealPlan.find({ userId: userIdToken.user_id })
 }
 
+export async function getCurrentMealPlan(userIdToken: admin.auth.DecodedIdToken): Promise<MealPlanInterface | null> {
+  return await MealPlan
+    .findOne({ userId: userIdToken.user_id, isCurrent: true })
+    .populate('recipes')
+    .populate('shoppingList')
+    .exec()
+}
+
 async function getMealPlanIngredients(recipeIds: ObjectId[]): Promise<Ingredient[]> {
   const mealPlanRecipes = await Recipe.find({ _id: recipeIds })
   return mealPlanRecipes.map(recipe => recipe.ingredients).flat()
