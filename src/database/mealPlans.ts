@@ -8,7 +8,7 @@ import ShoppingList from './schemas/shoppingListSchema.js';
 
 export async function addMealPlan(mealPlan: RequestMealPlan,  userIdToken: admin.auth.DecodedIdToken): Promise<MealPlanInterface> {
   try {
-    const oldCurrentMealPlan = MealPlan.findOne({ userId: userIdToken.user_id, isCurrent: true })
+    const oldCurrentMealPlans = await MealPlan.find({ userId: userIdToken.user_id, isCurrent: true }).exec()
 
     const newMealPlan = await MealPlan.create(
       {
@@ -20,7 +20,7 @@ export async function addMealPlan(mealPlan: RequestMealPlan,  userIdToken: admin
       }
     )
 
-    oldCurrentMealPlan.update({ isCurrent: false })
+    await MealPlan.updateMany({ _id: {$in: oldCurrentMealPlans} }, { $set: { isCurrent: false }})
     const mealPlanIngredients = await getMealPlanIngredients(newMealPlan.recipes)
 
     const shoppingList = await ShoppingList.create({
