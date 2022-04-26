@@ -16,6 +16,7 @@ describe('Meal Plans', () => {
 
   const recipeData = {
     title: 'Some recipe',
+    icon: '🤘',
     description: 'A very tasty one',
     ingredients: [
       { name: 'Bread', amount: 1, unit: 'pcs' },
@@ -90,7 +91,7 @@ describe('Meal Plans', () => {
       res.body.should.have.own.property('mealPlan')
       res.body.mealPlan.should.containSubset({...mealPlanData, recipes: [{...recipeData}, {...recipeData}]})
       const createdMealPlan = await MealPlan.find({ id: res.body.id })
-      createdMealPlan.should.exist  
+      createdMealPlan.should.exist
     })
 
     it('should not create a meal plan with invalid data', async () => {
@@ -122,7 +123,7 @@ describe('Meal Plans', () => {
       res.body.mealPlan.should.containSubset({...mealPlanData, recipes: [{...recipeData}, {...recipeData}]})
       res.body.mealPlan.should.have.own.property('shoppingList')
       const shoppingList = await ShoppingList.find({ _id: res.body.mealPlan.shoppingList })
-      shoppingList.should.exist  
+      shoppingList.should.exist
     })
   })
 })

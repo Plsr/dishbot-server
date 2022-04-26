@@ -14,6 +14,7 @@ describe('Recipes', () => {
 
   const recipeRequestBody = {
     title: 'Some recipe',
+    icon: '🤘',
     description: 'A very tasty one',
     ingredients: [
       { name: 'Bread', amount: 1, unit: 'pcs' },
@@ -142,7 +143,7 @@ describe('Recipes', () => {
         })
       })
 
-      
+
     })
 
     it('does not get a recipe that belongs to other users', (done) => {
@@ -156,7 +157,7 @@ describe('Recipes', () => {
         })
       })
 
-      
+
     })
   })
 
