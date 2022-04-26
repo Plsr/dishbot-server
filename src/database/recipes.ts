@@ -4,6 +4,7 @@ import { Recipe as RecipeInterface, RequestRecipe } from '../types/reicpe'
 
 export async function addRecipe(recipe: RequestRecipe, userIdToken: admin.auth.DecodedIdToken): Promise<RecipeInterface> {
   try {
+    console.log(recipe)
     const newRecipe = await Recipe.create(
       {
         ...recipe,

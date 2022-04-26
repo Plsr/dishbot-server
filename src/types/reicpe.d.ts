@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 export interface Recipe extends mongoose.Document {
   title: string,
+  icon: string,
   description?: string,
   userId: string,
   ingredients: [Ingredient],
